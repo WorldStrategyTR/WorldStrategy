@@ -5,6 +5,6 @@ document.getElementById('f').onchange=async e=>{const f=e.target.files[0];if(!f)
 if(t.includes('A.logout=function')){s.textContent='Bu dosyaya yama zaten uygulanmış.';return}
 const mk='load();if(S){S.parties.forEach';let i=t.indexOf(mk),o;
 if(i>=0)o=t.slice(0,i)+PATCH+'\n'+t.slice(i);
-else{const j=t.lastIndexOf('</script>');if(j<0){s.textContent='Geçerli bir oyun dosyası değil.';return}o=t.slice(0,j)+PATCH+'\ndraw();\n'+t.slice(j)}
+else{const j=t.lastIndexOf('<'+'/script>');if(j<0){s.textContent='Geçerli bir oyun dosyası değil.';return}o=t.slice(0,j)+PATCH+'\ndraw();\n'+t.slice(j)}
 const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([o],{type:'text/html'}));a.download='world-strategy-yamali.html';document.body.appendChild(a);a.click();a.remove();s.textContent='✔ world-strategy-yamali.html indirildi.'};
 </script></body></html>
