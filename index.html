@@ -465,9 +465,52 @@ const chatMessagesRef = query(chatRef, limitToLast(100));
 
 onChildAdded(chatMessagesRef, (snapshot) => {
   const data = snapshot.val();
-  console.log("Genel sohbet mesajı:", data);
+  const messages = document.getElementById("chat-messages");
+
+  if (!messages || !data) return;
+
+  const row = document.createElement("div");
+  const name = document.createElement("strong");
+  const text = document.createElement("span");
+
+  name.textContent = (data.username || "Oyuncu") + ": ";
+  text.textContent = data.message || "";
+
+  row.style.marginBottom = "8px";
+  row.style.overflowWrap = "anywhere";
+  row.append(name, text);
+  messages.appendChild(row);
+
+  messages.scrollTop = messages.scrollHeight;
 });
 const database = getDatabase(app);
+document.getElementById("chat-send").addEventListener("click", async () => {
+  const input = document.getElementById("chat-input");
+  const status = document.getElementById("chat-status");
+  const message = input.value.trim();
+
+  if (!auth.currentUser) {
+    status.textContent = "Mesaj göndermek için giriş yapmalısın.";
+    return;
+  }
+
+  if (!message || message.length > 300) return;
+
+  try {
+    await push(chatRef, {
+      uid: auth.currentUser.uid,
+      username: auth.currentUser.displayName || "Oyuncu",
+      message: message,
+      timestamp: serverTimestamp()
+    });
+
+    input.value = "";
+    status.textContent = "Mesaj gönderildi.";
+  } catch (error) {
+    status.textContent = "Mesaj gönderilemedi. Firebase kurallarını kontrol et.";
+    console.error(error);
+  }
+});
 </script>
 <div id="world-chat" style="position:fixed;right:12px;bottom:12px;width:300px;max-width:calc(100vw - 24px);background:#172033;color:white;padding:12px;border-radius:12px;z-index:9999;font-family:Arial">
   <h3>World Strategy TR Chat</h3>
@@ -482,13 +525,43 @@ const database = getDatabase(app);
     <button type="submit">Gönder</button>
   </form>
 </div>
-<div id="global-chat" style="position:fixed;bottom:12px;right:12px;width:300px;background:#172033;color:white;border:1px solid #475569;border-radius:12px;padding:12px;z-index:9999;font-family:Arial,sans-serif;">
-  <h3 style="margin:0 0 10px;">🌍 Genel Sohbet</h3>
-  <div id="chat-messages" style="height:180px;overflow-y:auto;background:#0f172a;padding:8px;border-radius:8px;margin-bottom:8px;"></div>
-  <input id="chat-input" maxlength="300" placeholder="Mesajını yaz..." style="width:100%;box-sizing:border-box;padding:10px;margin-bottom:8px;">
-  <button id="chat-send" style="width:100%;padding:10px;cursor:pointer;">Mesaj Gönder</button>
+<div id="chat-toggle" style="position:fixed;bottom:15px;right:15px;z-index:10000;">
+  <button id="chat-toggle-btn" style="padding:12px 18px;background:#2563eb;color:white;border:0;border-radius:10px;font-weight:bold;">
+    💬 Chat
+  </button>
+</div>
+
+<div id="global-chat" style="display:none;position:fixed;bottom:65px;right:15px;width:280px;max-width:calc(100vw - 30px);background:#172033;color:white;border:1px solid #475569;border-radius:12px;padding:12px;z-index:9999;font-family:Arial,sans-serif;box-sizing:border-box;">
+  <div style="display:flex;justify-content:space-between;align-items:center;">
+    <h3 style="margin:0 0 10px;">🌍 Genel Sohbet</h3>
+    <button id="chat-close-btn" style="margin-bottom:10px;padding:5px 10px;">✖</button>
+  </div>
+
+  <div id="chat-messages" style="height:180px;overflow-y:auto;background:#0f172a;padding:8px;border-radius:8px;"></div>
+
+  <input id="chat-input" maxlength="300" placeholder="Mesajını yaz..." style="width:100%;box-sizing:border-box;padding:10px;margin-top:8px;">
+
+  <button id="chat-send" style="width:100%;padding:10px;margin-top:8px;">Mesaj Gönder</button>
+
   <div id="chat-status" style="font-size:12px;margin-top:6px;"></div>
 </div>
+
+<script>
+(function () {
+  const panel = document.getElementById("global-chat");
+  const toggle = document.getElementById("chat-toggle-btn");
+  const close = document.getElementById("chat-close-btn");
+
+  toggle.addEventListener("click", function () {
+    panel.style.display =
+      panel.style.display === "none" ? "block" : "none";
+  });
+
+  close.addEventListener("click", function () {
+    panel.style.display = "none";
+  });
+})();
+</script>
 <div id="global-chat" style="position:fixed;bottom:12px;right:12px;width:300px;background:#172033;color:white;border:1px solid #475569;border-radius:12px;padding:12px;z-index:9999;font-family:Arial,sans-serif;">
   <h3>🌍 Genel Sohbet</h3>
   <div id="chat-messages" style="height:180px;overflow-y:auto;background:#0f172a;padding:8px;"></div>
