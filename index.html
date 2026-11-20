@@ -527,20 +527,30 @@ document.getElementById("chat-send").addEventListener("click", async () => {
 
   <div id="chat-status" style="font-size:12px;margin-top:6px;"></div>
 </div>
-
+<div id="global-chat" style="display:none;position:fixed;bottom:65px;right:15px;width:280px;max-width:calc(100vw - 30px);background:#172033;color:white;padding:12px;border-radius:12px;z-index:9999;font-family:Arial,sans-serif;">
+  <h3>🌍 Genel Sohbet</h3>
+  <div id="chat-messages" style="height:180px;overflow-y:auto;background:#0f172a;padding:8px;"></div>
+  <form id="chat-form">
+    <input id="chat-input" maxlength="300" placeholder="Mesajını yaz..." required style="width:68%;box-sizing:border-box;">
+    <button type="submit">Gönder</button>
+  </form>
+  <button id="chat-close-btn" type="button">Kapat</button>
+</div>
 <script>
 (function () {
-  const panel = document.getElementById("world-chat");
+  const panel = document.getElementById("global-chat");
   const toggle = document.getElementById("chat-toggle-btn");
+  const close = document.getElementById("chat-close-btn");
 
-  if (!panel || !toggle) return;
+  if (!panel || !toggle || !close) return;
 
   toggle.addEventListener("click", function () {
-    if (panel.style.display === "none") {
-      panel.style.display = "block";
-    } else {
-      panel.style.display = "none";
-    }
+    panel.style.display =
+      getComputedStyle(panel).display === "none" ? "block" : "none";
+  });
+
+  close.addEventListener("click", function () {
+    panel.style.display = "none";
   });
 })();
 </script>
