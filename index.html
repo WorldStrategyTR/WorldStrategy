@@ -512,30 +512,12 @@ document.getElementById("chat-send").addEventListener("click", async () => {
   }
 });
 </script>
-<div id="world-chat" style="display:none;position:fixed;right:12px;bottom:12px;width:300px;max-width:calc(100vw - 24px);background:#172033;color:white;padding:12px;border-radius:12px;z-index:9999;font-family:Arial">
-  <h3>World Strategy TR Chat</h3>
-  <select id="chat-type">
-    <option value="global">Genel Sohbet</option>
-    <option value="country">Ülke Sohbeti</option>
-  </select>
-  <div id="chat-status">Bağlantı bekleniyor...</div>
-  <div id="chat-messages" style="height:220px;overflow-y:auto;margin:10px 0"></div>
-  <form id="chat-form">
-    <input id="chat-input" maxlength="300" placeholder="Mesajını yaz..." required style="width:68%">
-    <button type="submit">Gönder</button>
-  </form>
-</div>
 <div id="chat-toggle" style="position:fixed;bottom:15px;right:15px;z-index:10000;">
   <button id="chat-toggle-btn" style="padding:12px 18px;background:#2563eb;color:white;border:0;border-radius:10px;font-weight:bold;">
     💬 Chat
   </button>
 </div>
 
-width:280px;max-width:calc(100vw - 30px);background:#172033;color:white;border:1px solid #475569;border-radius:12px;padding:12px;z-index:9999;font-family:Arial,sans-serif;box-sizing:border-box;">
-  <div style="display:flex;justify-content:space-between;align-items:center;">
-    <h3 style="margin:0 0 10px;">🌍 Genel Sohbet</h3>
-    <button id="chat-close-btn" style="margin-bottom:10px;padding:5px 10px;">✖</button>
-  </div>
 
   <div id="chat-messages" style="height:180px;overflow-y:auto;background:#0f172a;padding:8px;border-radius:8px;"></div>
 
@@ -548,7 +530,7 @@ width:280px;max-width:calc(100vw - 30px);background:#172033;color:white;border:1
 
 <script>
 (function () {
-  const panel = document.getElementById("world-chat");
+  const panel = document.getElementById("global-chat");
   const toggle = document.getElementById("chat-toggle-btn");
 
   if (!panel || !toggle) return;
@@ -562,11 +544,5 @@ width:280px;max-width:calc(100vw - 30px);background:#172033;color:white;border:1
   });
 })();
 </script>
-<div id="global-chat" style="position:fixed;bottom:12px;right:12px;width:300px;background:#172033;color:white;border:1px solid #475569;border-radius:12px;padding:12px;z-index:9999;font-family:Arial,sans-serif;">
-  <h3>🌍 Genel Sohbet</h3>
-  <div id="chat-messages" style="height:180px;overflow-y:auto;background:#0f172a;padding:8px;"></div>
-  <input id="chat-input" maxlength="300" placeholder="Mesajını yaz..." style="width:100%;box-sizing:border-box;padding:10px;margin-top:8px;">
-  <button id="chat-send" style="width:100%;padding:10px;margin-top:8px;">Mesaj Gönder</button>
-  <div id="chat-status"></div>
-</div>
+
 </body></html>
