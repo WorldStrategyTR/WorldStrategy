@@ -506,10 +506,10 @@ document.getElementById("chat-send").addEventListener("click", async () => {
 
     input.value = "";
     status.textContent = "Mesaj gönderildi.";
-  } catch (error) {
-    status.textContent = "Mesaj gönderilemedi. Firebase kurallarını kontrol et.";
+ } catch (error) {
+    status.textContent = "Hata: " + error.code + " - " + error.message;
     console.error(error);
-  }
+}
 });
 </script>
 <div id="chat-toggle" style="position:fixed;bottom:15px;right:15px;z-index:10000;">
