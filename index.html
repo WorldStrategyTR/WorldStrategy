@@ -56,7 +56,7 @@ const MW=1000,MH=580,WX=(lo,la)=>{let dx=(lo-25)*.65,dy=la-47;const r=Math.hypot
 const CLL=[[-75.7,45.4],[-123.1,49.3],[-114,51],[22,52.3],[20.3,49.6],[18.8,54],[30.5,50.4],[36.2,49.9],[30.5,46.9],[13.4,52.5],[11.6,48.1],[9.8,53.2],[2.35,48.9],[4.8,45.8],[5.2,43.8],[12.2,42.3],[9.2,45.5],[15.5,40.3],[-3.7,40.4],[2,41.8],[-5.9,37.4],[32.9,39.9],[29,40.9],[27.2,38.4],[23.2,38.6],[22.5,40.9],[25,35.3],[31.8,29.9],[28.6,30.6],[32.9,24.1],[51.4,35.7],[51.7,32.7],[52.5,29.6],[44.4,33.3],[47.8,30.5],[43.1,36.3],[46.7,24.7],[39.6,22.6],[42,19.8],[77.2,28.6],[73.6,19.2],[77.6,13],[116.4,39.9],[120.8,31],[113.3,23.1],[140.4,36.2],[135.8,34.4],[137.8,36.5],[-48,-15.5],[-41.8,-20.5],[-50,-24.5],[-79,37.5],[-73.5,41.5],[-118.2,34]];
 const RG=CLL.map((ll,id)=>({id,c:id/3|0,k:id%3,city:CT[id/3|0][id%3],res:['Tahıl','Bakır','Demir'][(id+(id/9|0))%3],pop:150+(id*47)%170,cen:WX(ll[0],ll[1])}));
 const NB=(()=>{const E=RG.map(()=>new Set);RG.forEach(a=>{RG.filter(b=>b.id!=a.id).map(b=>[b.id,Math.hypot(a.cen[0]-b.cen[0],a.cen[1]-b.cen[1])]).sort((p,q)=>p[1]-q[1]).slice(0,4).forEach(([j])=>{E[a.id].add(j);E[j].add(a.id)});RG.forEach(b=>{if(b.c==a.c&&b.id!=a.id)E[a.id].add(b.id)})});return E.map(s=>[...s])})();
-const ADMIN='tahsinbera.bs@gmail.com',ACT=[0,7,16,17],CLOUD_DEFAULT='',KEY_DEFAULT='';let CLOUD='',FBK='',AUTHB='https://identitytoolkit.googleapis.com/v1',TOKB='https://securetoken.googleapis.com/v1';try{CLOUD=(localStorage.getItem('ws_cloud')||CLOUD_DEFAULT).replace(/\/$/,'');FBK=localStorage.getItem('ws_key')||KEY_DEFAULT;AUTHB=localStorage.getItem('ws_authb')||AUTHB;TOKB=localStorage.getItem('ws_tokb')||TOKB}catch{CLOUD=CLOUD_DEFAULT;FBK=KEY_DEFAULT}if(!FBK)CLOUD='';const ON=()=>!!CLOUD;
+const ADMIN='tahsinbera.bs@gmail.com',ACT=[0,7,16,17],CLOUD_DEFAULT='https://world-strategy-tr-9f788-default-rtdb.firebaseio.com',KEY_DEFAULT='AIzaSyDMpFqsRHmQ6g9_dpzIF5AHXDBv30_8LWo';let CLOUD='',FBK='',AUTHB='https://identitytoolkit.googleapis.com/v1',TOKB='https://securetoken.googleapis.com/v1';try{CLOUD=(CLOUD_DEFAULT||localStorage.getItem('ws_cloud')||'').replace(/\/$/,'');FBK=KEY_DEFAULT||localStorage.getItem('ws_key')||'';AUTHB=localStorage.getItem('ws_authb')||AUTHB;TOKB=localStorage.getItem('ws_tokb')||TOKB}catch{CLOUD=CLOUD_DEFAULT;FBK=KEY_DEFAULT}if(!FBK)CLOUD='';const ON=()=>!!CLOUD;
 const ROLES={savunma:'Savunma Bakanı',ekonomi:'Ekonomi Bakanı',ic:'İçişleri Bakanı',dis:'Dışişleri Bakanı'};
 let RST=0,S=null,tab='home',sel=null,shT='gen',mz=1,mc=[MW/2,MH/2],RF={},rs=1,LAUNCH=+localStorage.getItem('ws_launch')||Date.now(),LMSG='';
 try{localStorage.getItem('ws_launch')||localStorage.setItem('ws_launch',LAUNCH)}catch{}
@@ -275,7 +275,7 @@ RF.pw='';rs=1;await doLogout(0);LMSG='✔ Kayıt tamamlandı. E-postana doğrula
 async function doLogout(push){if(push&&S&&ON())await pushProfile(1);AUTH={uid:'',tok:'',ref:'',exp:0};try{localStorage.removeItem('ws_auth');localStorage.removeItem(K);localStorage.removeItem('ws_u')}catch{}S=null;UNL=0;SNAP={};SYNCED=0;MENU=0;BOOT=0;AM='login';LMSG='Çıkış yapıldı.';tab='home';draw()}
 function bootOnline(){if(!ON())return;let r='';try{r=JSON.parse(localStorage.getItem('ws_auth')||'{}').ref||''}catch{}if(!r){S=null;UNL=0;return}BOOT=1;AUTH.ref=r;AUTH.exp=0;
 tok().then(async t=>{if(!t){await doLogout(0);return}const pr=await cl('/u/'+AUTH.uid);if(pr&&pr.me){const ch=S&&S.chat;S=pr;normS();if(ch)S.chat=ch}if(!S){await doLogout(0);return}S.me.uid=AUTH.uid;S.me.ev=await chkEv();SYNCED=0;await initWorld();UNL=1;BOOT=0;try{localStorage.setItem('ws_u','1')}catch{}draw();cloudSync()})}
-const rawU=()=>{try{return localStorage.getItem('ws_cloud')||CLOUD_DEFAULT}catch{return CLOUD_DEFAULT}},rawK=()=>{try{return localStorage.getItem('ws_key')||KEY_DEFAULT}catch{return KEY_DEFAULT}};
+const rawU=()=>{try{return CLOUD_DEFAULT||localStorage.getItem('ws_cloud')||''}catch{return CLOUD_DEFAULT}},rawK=()=>{try{return KEY_DEFAULT||localStorage.getItem('ws_key')||''}catch{return KEY_DEFAULT}};
 const srvCard=(a,b)=>`<details style="margin-top:10px"><summary class="m">⚙ Sunucu ayarı (çok oyunculu)</summary><p class="m">Firebase Realtime Database adresi ve Web API anahtarı. İkisi de doluysa oyun çevrimiçi çalışır.</p><input id="${a}" value="${esc(rawU())}" placeholder="https://...firebasedatabase.app"><input id="${b}" value="${esc(rawK())}" placeholder="Web API anahtarı (AIza...)"><button class="btn p" onclick="A.srv('${a}','${b}')">Kaydet ve yenile</button></details>`;
 function srvSave(a,b){const u=($('#'+a).value||'').trim().replace(/\/$/,''),k=($('#'+b).value||'').trim();try{localStorage.setItem('ws_cloud',u);localStorage.setItem('ws_key',k)}catch{}location.reload()}
 function vAuth(){$('#nav').innerHTML='';$('#bn').innerHTML='';$('#bt').innerHTML='';$('#top').innerHTML=`<b>⚔ WORLD STRATEGY <small class="m">${VER}</small></b>`;
@@ -362,5 +362,41 @@ if(resolveP())ch=1;if(ch)save();return ch}
 function draw(){if(!S){ON()&&AM=='login'?vAuth():vReg();return}if(!UNL){vLock();return}ens();if(ON()&&!S.me.ev){vVerify();return}if((tab=='adm'&&!S.me.adm)||(tab=='modp'&&!(S.me.adm||isMod(S.me.name))))tab='home';settle();const KP={};if(KEEP&&document.getElementById)['cm','dmx','ht','ax','at','bio','rn','mu','mt','dq','rnote','bgn','bgt','bge'].forEach(i=>{const e=document.getElementById(i);if(e&&e.value)KP[i]=e.value});hdr();bnav();const sn=S.sanc[S.me.name.toLowerCase()]||{};if((sn.bn||0)>Date.now()){$('#v').innerHTML='<div class="card"><h3>⛔ Hesap askıda</h3><p>Moderatör kararıyla hesabınız askıya alındı.</p></div>';return}if(MENU){$('#v').innerHTML=vMenu();return}$('#v').innerHTML={home:vHome,prof:vProf,harita:vMap,party:vParty,sec:vSec,news:vPress,press:vPress,ach:vAch,bil:vBil,pre:vPre,adm:vAdm,war:vWar,modp:vModp,chat:vChat,dm:vDM,help:vHelp,book:vBook,mk:vMk,job:vJob,gov:vGov,co:vCo,players:vPlayers}[tab]()+(REP?vRep():'');if(KEEP)Object.keys(KP).forEach(i=>{const e=document.getElementById(i);if(e)e.value=KP[i]});tick();if(tab=='harita'&&!MENU&&GL.st==2&&!GL.flat)globeInit()}
 const DONE=new Set();let RD=0;
 function tick(){if(!S||!UNL)return;const c=S.me.c,e=S.el[c];if(e&&e.open&&Date.now()>=e.end&&tab!='sec'){closeEl(c)}const cd=$('#cd');if(cd&&e)cd.textContent=fT(e.end-Date.now());if(document.querySelectorAll)document.querySelectorAll('.cdt').forEach(x=>{const s=Math.max(0,Math.ceil((+x.dataset.at-Date.now())/1000));x.textContent=(s/60|0)+':'+String(s%60).padStart(2,'0');if(!s){const k=x.dataset.at;if(!DONE.has(k)){if(DONE.size>300)DONE.clear();DONE.add(k);if(!RD)RD=setTimeout(()=>{RD=0;dk()},30)}}})}
+/*WSFIX1*/(function(){
+ const st=document.createElement('style');st.textContent='.card{animation:none!important}';document.head.appendChild(st);
+ const D=Object.getOwnPropertyDescriptor(Element.prototype,'innerHTML'),FORM=/^(INPUT|TEXTAREA|SELECT|CANVAS)$/;
+ function shape(a,b){
+  if(a.childNodes.length!==b.childNodes.length)return false;
+  for(let i=0;i<a.childNodes.length;i++){
+   const x=a.childNodes[i],y=b.childNodes[i];
+   if(x.nodeType!==y.nodeType||x.nodeName!==y.nodeName)return false;
+   if(x.nodeType===1&&!FORM.test(x.nodeName)&&!shape(x,y))return false;
+  }
+  return true;
+ }
+ function apply(a,b){
+  for(let i=0;i<a.childNodes.length;i++){
+   const x=a.childNodes[i],y=b.childNodes[i];
+   if(x.nodeType===3){if(x.nodeValue!==y.nodeValue)x.nodeValue=y.nodeValue;continue}
+   if(x.nodeType!==1||FORM.test(x.nodeName))continue;
+   Array.from(x.attributes).forEach(at=>{if(at.name!=='open'&&!y.hasAttribute(at.name))x.removeAttribute(at.name)});
+   Array.from(y.attributes).forEach(at=>{if(at.name!=='open'&&x.getAttribute(at.name)!==at.value)x.setAttribute(at.name,at.value)});
+   apply(x,y);
+  }
+ }
+ ['#v','#top','#bt','#nav','#bn'].forEach(s=>{
+  const el=document.querySelector(s);if(!el)return;
+  Object.defineProperty(el,'innerHTML',{configurable:true,
+   get(){return D.get.call(this)},
+   set(h){
+    if(KEEP&&this.firstChild){
+     const t=document.createElement('template');t.innerHTML=h;
+     if(shape(this,t.content)){apply(this,t.content);return}
+    }
+    D.set.call(this,h);
+   }});
+ });
+})();
+
 load();bootOnline();if(S){S.parties.forEach(p=>elect(p.c));if(!S.me.auto){S.me.en=Math.min(MX(S.me.lv),S.me.en+Math.floor((Date.now()-S.me.lastE)/12e4));S.me.lastE=Date.now()}Object.keys(S.el).forEach(c=>S.el[c]&&closeEl(+c))}draw();document.addEventListener('visibilitychange',()=>{if(!document.hidden&&S&&UNL){settle();dk()}});setInterval(()=>{if(S&&UNL){if(settle())dk();if(++TC%60==0){warTick();if(tab=='war')dk()}tick();if(CLOUD&&TC%4==0)cloudSync()}},1000);
 </script></body></html>
